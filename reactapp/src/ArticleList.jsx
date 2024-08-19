@@ -5,11 +5,19 @@ const ArticleList = () => {
   const [sortBy, setSortBy] = useState('newest'); // Default sorting option
 
   // Function to fetch articles based on the selected sorting option
-  const fetchArticles = (sortOption) => {
-    fetch(`http://localhost:3000/api/articles?sortBy=${sortOption}`)
-      .then(response => response.json())
-      .then(data => setArticles(data))
-      .catch(error => console.error('Error fetching articles:', error));
+  const fetchArticles = async (sortOption) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/articles?sortBy=${sortOption}`);
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch articles');
+      }
+
+      const data = await response.json();
+      setArticles(data);
+    } catch (error) {
+      console.error('Error fetching articles:', error);
+    }
   };
 
   useEffect(() => {
@@ -21,7 +29,7 @@ const ArticleList = () => {
   };
 
   return (
-    <div style={{color: 'black'}}>
+    <div style={{ color: 'black' }}>
       <h1>Articles</h1>
 
       {/* Sorting Menu */}

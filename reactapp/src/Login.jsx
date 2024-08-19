@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const history = useHistory(); // Initialize useHistory
 
   const handleLogin = async () => {
     const response = await fetch('http://localhost:3000/api/login', {
@@ -11,9 +13,11 @@ const Login = () => {
       body: JSON.stringify({ username, password }),
     });
     const data = await response.json();
+    
     if (data.token) {
       localStorage.setItem('token', data.token);
       alert('Login successful');
+      history.push('/'); // Redirect to the main page
     } else {
       alert(data.message);
     }

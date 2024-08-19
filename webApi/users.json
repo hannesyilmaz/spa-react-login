@@ -10,5 +10,17 @@
   {
     "username": "hannes3",
     "password": "$2a$08$1DmGg.6a4yxLxCa6bw4Nduj9NrBh7KTyi7a5YNkdpY3SznGmujIAu"
+  },
+  {
+    "username": "hannes4",
+    "password": "$2a$08$F04CMtU43lTytyvBo7oncebF9q7MfP8PjREjisAt4ILnGwUniiOXC"
+  },
+  {
+    "username": "hannes5",
+    "password": "$2a$08$kN9YzhfAEgA2NGpxKUhogO56enZq4doSmH8cqQ82arL8rzRGlbK5m"
+  },
+  {
+    "username": "hannes6",
+    "password": "$2a$08$mhvs7XrP0BeP9FOQngSpJOIZKM72zGzcINw3OdD5dd4C/SBaFWq4i"
   }
 ]
