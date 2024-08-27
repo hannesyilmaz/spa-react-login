@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
+const mysql = require('mysql2');
 const jwt = require('jsonwebtoken');
 const { expressjwt: expressJwt } = require('express-jwt');
 const app = express();
@@ -68,36 +69,30 @@ app.get('/api/protected', expressJwt({ secret: 'your_jwt_secret', algorithms: ['
   res.json({ message: 'This is a protected route', user: req.user });
 });
 
-// Hard-coded articles data
-const articles = [
-  {
-    title: "Inte klart med ersättare för Ribbenvik",
-    summary: "Regeringen och SD har ännu inte hittat någon ersättare för Migrationsverkets avgående generaldirektör Mikael Ribbenvik.",
-    link: "https://www.aftonbladet.se/nyheter/a/8JWWL2/inte-klart-med-ersattare-for-ribbenvik",
-    published: new Date(Date.now() - 86400000),
-    topic: ["SamhalleKonflikter"]
-  },
-  {
-    title: "Drogs in i inhägnad – dödades av 40 krokodiler",
-    summary: "En 72-årig man har dödats av omkring 40 krokodiler sedan han dragits in i en inhägnad på familjens reptilfarm.",
-    link: "https://www.aftonbladet.se/nyheter/a/bgWW6e/drogs-in-i-inhagnad-dodades-av-40-krokodiler",
-    published: new Date(Date.now() - 172800000),
-    topic: ["Ekonomi"]
-  },
-];
+
+
+// AWS lösenord: ConrecJensen1!
+// Articles Route
+const db = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "password!",
+  database: "newsextractdb"
+});
+
 
 // API endpoint to get articles
 app.get('/api/articles', (req, res) => {
-  let filteredArticles = articles;
-  const { sortBy } = req.query;
-
-  if (sortBy === 'newest') {
-    filteredArticles = filteredArticles.sort((a, b) => new Date(b.published) - new Date(a.published));
-  } else if (sortBy === 'oldest') {
-    filteredArticles = filteredArticles.sort((a, b) => new Date(a.published) - new Date(b.published));
-  }
-
-  res.json(filteredArticles);
+  const sortBy = req.query.sortBy || 'newest';
+  let sortOrder = sortBy === 'newest' ? 'DESC' : 'ASC';
+  const query = `SELECT title, summary, link, published, topic FROM news ORDER BY published ${sortOrder}`;
+  
+  db.query(query, (error, results) => {
+      if (error) {
+          return res.status(500).send(error.message);
+      }
+      res.json(results);
+  });
 });
 
 app.listen(3000, () => {
